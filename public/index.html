@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Pattrrn Studios Chatbot" />
+    <title>Pattrrn Studios Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      // Real Claude API integration via backend
+      window.claude = {
+        complete: async function(prompt) {
+          try {
+            const response = await fetch('/.netlify/functions/claude', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt })
+            }); 
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.response;
+          } catch (error) {
+            console.error('Error calling Claude API:', error);
+            throw error;
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
