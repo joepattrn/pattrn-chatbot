@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, MessageCircle, Loader2 } from 'lucide-react';
 
-const PattrnStudiosChatbot = () => {
+const PattrntStudiosChatbot = () => {
   const [messages, setMessages] = useState([
     { 
       id: 1, 
-      text: "Hello there. We're Pattrrn Studios", 
+      text: "Hello there. We're Pattrn Studios", 
       sender: 'bot', 
       timestamp: new Date(),
       isVisible: false
     },
     { 
       id: 2, 
-      text: "We help fintech and wealth tech companies build better customer experiences", 
+      text: "We are an independent design studio making digital experiences that deliver lasting value", 
       sender: 'bot', 
       timestamp: new Date(),
       isVisible: false
     },
     { 
       id: 3, 
-      text: "What brings you here today", 
+      text: "How can we help you today? Please don't hesitate to ask us anything about our company, our services, or your specific inquiry", 
       sender: 'bot', 
       timestamp: new Date(),
       isVisible: false
@@ -65,13 +65,13 @@ const PattrnStudiosChatbot = () => {
         setMessages(prev => prev.map(msg => 
           msg.id === 2 ? { ...msg, isVisible: true } : msg
         ));
-      }, 1800);
+      }, 2200);
 
       setTimeout(() => {
         setMessages(prev => prev.map(msg => 
           msg.id === 3 ? { ...msg, isVisible: true } : msg
         ));
-      }, 2500);
+      }, 3800);
     };
 
     showInitialMessages();
@@ -123,75 +123,26 @@ const PattrnStudiosChatbot = () => {
       }));
 
       const prompt = `
-      You are a chatbot for Pattrrn Studios, a user experience design studio that specializes in solving service-related problems.
-
-      Brand Information:
-      - Company: Pattrrn Studios (note: "Pattrrn" not "Pattern")
-      - Mission: Making digital experiences that deliver lasting value
-      - Focus: We mostly work with people in asset management, wealth technology, and fintech
-      - Core Philosophy: "Start with people and their problems" - technology can't solve problems by itself
-      - Services: Digital Product Design, Product Management, UX/UI Design, User Research, Strategy & Consulting, Service Design
-      - Method: Customer-driven insight to end result, evidence-based decisions backed by data
-      - Goal: Guide conversations toward project needs and contact us
-
-      Tone of Voice (CRITICAL - follow these exactly):
-      - Quietly confident, not in your face: Be clear, accurate, honest. Back up points with expertise
-      - Approachable, not VIP: Friendly and welcoming, like "equally at home in boardroom or nice pub"
-      - Considered, not chatty: Choose words carefully, use short tidy sentences, be economical with language
-      - Disarmingly smart, not intellectually vain: Present intelligence with humility
-
-      Writing Guidelines:
-      - Write shorter sentences than normal
-      - Use everyday language ("do" rather than "achieve")
-      - Avoid buzzwords and corporate jargon
-      - Be human - use empathy, sound like a real person
-      - Paint pictures with real examples rather than abstract statements
-      - NO exclamation marks ever
-      - Use "we" when talking about Pattrrn
-
-      Target Audience Context:
-      - Primary clients: CMOs, CTOs, COOs, CXOs, Founders, VCs, Digital Product Owners in fintech/wealth tech
-      - Common challenges: Need better customer experience, want to scale systems, need to be more customer-centric, want to move faster on good ideas, need to differentiate from competitors
-
-      Key Messages to Communicate:
-      - "Most business challenges are rooted in relationship problems - the ones you have with your customers"
-      - We put customers at the center of design through listening, empathizing, being their champions
-      - We do efficient deep dives into customer pain points using data, then turn it into prototypes to test
-      - "Strategy is only useful when you can act on it"
-      - We work lean, at speed, with dedicated 'pods' that match business needs
-      - We believe in long term engagements, not quick flings
-
-      Conversation History:
+      Previous conversation history:
       ${JSON.stringify(conversationHistory)}
 
-      Instructions:
-      1. Respond with 2-4 short messages (text message style)
-      2. Follow Pattrrn's tone of voice guidelines exactly - be quietly confident, approachable, considered
-      3. Use shorter sentences and everyday language
-      4. Avoid buzzwords and jargon
-      5. Be human and empathetic
-      6. Paint pictures with real examples when possible
-      7. NO exclamation marks
-      8. When appropriate, ask about their specific challenges or project needs
-      9. Guide conversations toward understanding their problems and connecting with our team
-      10. Focus on fintech/wealth tech context when relevant
-
       Current user message: "${inputText}"
-
-      Respond with JSON containing an array of messages with realistic delays:
-      {
-        "messages": [
-          {"text": "message 1", "delay": 1200},
-          {"text": "message 2", "delay": 1800},
-          {"text": "message 3", "delay": 1500}
-        ]
-      }
-
-      Do not include backticks, markdown formatting, or any other text. Start your response directly with the opening brace {
       `;
 
-      const response = await window.claude.complete(prompt);
-      const cleanedResponse = cleanJsonResponse(response);
+      const response = await fetch('/.netlify/functions/claude', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const cleanedResponse = cleanJsonResponse(data.response);
       const jsonResponse = JSON.parse(cleanedResponse);
 
       // Add messages to typing queue
@@ -200,7 +151,7 @@ const PattrnStudiosChatbot = () => {
     } catch (error) {
       console.error('Error in Claude completion:', error);
       const errorMessage = {
-        text: "I apologize, but I encountered an error. Please try again.",
+        text: "I apologise, but I encountered an error. Please try again.",
         delay: 1000
       };
       setTypingQueue([errorMessage]);
@@ -225,7 +176,7 @@ const PattrnStudiosChatbot = () => {
             <MessageCircle className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Pattrrn Studios</h1>
+            <h1 className="text-xl font-semibold text-gray-900">Pattrn Studios</h1>
             <p className="text-sm text-gray-600">Partners in Design and Innovation</p>
           </div>
         </div>
@@ -319,4 +270,4 @@ const PattrnStudiosChatbot = () => {
   );
 };
 
-export default PattrnStudiosChatbot;
+export default PattrntStudiosChatbot;
